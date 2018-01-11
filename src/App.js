@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-// import * as BooksAPI from './BooksAPI'
 import ListBooks from './view/ListBooks';
-import { SearchBar } from './components';
+import SearchBooks from './view/SearchBooks';
 
 import './App.css'
 
@@ -13,21 +12,16 @@ class MyReadsApp extends Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
-    showSearchPage: true
+    showSearchPage: false
   }
 
   render() {
     return (
       <div className="app">
         {this.state.showSearchPage ? (
-          <div className="search-books">
-            <SearchBar placeholder="Search by title or author" onMainPage={() => this.setState({ showSearchPage: false })} />
-            <div className="search-books-results">
-              <ol className="books-grid"></ol>
-            </div>
-          </div>
+          <SearchBooks onMainPage={() => this.setState({ showSearchPage: false })} />
         ) : (
-          <ListBooks onSearchPage={() => this.setState({ showSearchPage: true })}/>
+          <ListBooks onSearchPage={() => this.setState({ showSearchPage: true })} />
         )}
       </div>
     )
