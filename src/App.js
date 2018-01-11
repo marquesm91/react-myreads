@@ -1,6 +1,6 @@
 import React from 'react'
 // import * as BooksAPI from './BooksAPI'
-import { Book } from './components';
+import { Shelf } from './components';
 
 import './App.css'
 
@@ -85,48 +85,9 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Currently Reading</h2>
-                  <div className="bookshelf-books">
-                    <ol className="books-grid">
-                      <li>
-                        <Book title={books[0].title} author={books[0].author} imageUrl={books[0].imageUrl} />
-                      </li>
-                      <li>
-                        <Book title={books[1].title} author={books[1].author} imageUrl={books[1].imageUrl} />
-                      </li>
-                    </ol>
-                  </div>
-                </div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Want to Read</h2>
-                  <div className="bookshelf-books">
-                    <ol className="books-grid">
-                      <li>
-                        <Book title={books[2].title} author={books[2].author} imageUrl={books[2].imageUrl} />
-                      </li>
-                      <li>
-                        <Book title={books[3].title} author={books[3].author} imageUrl={books[3].imageUrl} />
-                      </li>
-                    </ol>
-                  </div>
-                </div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Read</h2>
-                  <div className="bookshelf-books">
-                    <ol className="books-grid">
-                      <li>
-                        <Book title={books[4].title} author={books[4].author} imageUrl={books[4].imageUrl} />
-                      </li>
-                      <li>
-                        <Book title={books[5].title} author={books[5].author} imageUrl={books[5].imageUrl} />
-                      </li>
-                      <li>
-                        <Book title={books[6].title} author={books[6].author} imageUrl={books[6].imageUrl} />
-                      </li>
-                    </ol>
-                  </div>
-                </div>
+                <Shelf title="Currently Reading" books={[books[0], books[1]]} />
+                <Shelf title="Want to Read" books={[books[2], books[3]]} />
+                <Shelf title="Read" books={[books[4], books[5], books[6]]} />
               </div>
             </div>
             <div className="open-search">
