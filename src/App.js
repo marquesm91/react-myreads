@@ -40,7 +40,7 @@ class MyReadsApp extends Component {
             </div>
           </div>
         ) : (
-          <ListBooks onSearchBook={() => this.setState({ showSearchPage: true })}/>
+          <ListBooks onSearchPage={() => this.setState({ showSearchPage: true })}/>
         )}
       </div>
     )
