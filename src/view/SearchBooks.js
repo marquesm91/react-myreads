@@ -5,7 +5,7 @@ class SearchBooks extends Component {
   render() {
     return (
       <div className="search-books">
-        <SearchBar placeholder="Search by title or author" onMainPage={() => this.props.onMainPage()} />
+        <SearchBar placeholder="Search by title or author" />
         <div className="search-books-results">
           <ol className="books-grid"></ol>
         </div>
