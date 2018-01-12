@@ -36,6 +36,9 @@ class ListBooks extends Component {
         }
       }
     });
+
+    // Also updates shelf on server to persist data
+    BooksAPI.update(book, shelf);
   }
 
   render() {
