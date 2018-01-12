@@ -7,7 +7,7 @@ class SearchBar extends Component {
   }
 
   onChangeQueryHandler = event => {
-    this.setState({ query: event.target.value.trim() });
+    this.setState({ query: event.target.value });
   }
 
   onKeyPressHandler = event => {
