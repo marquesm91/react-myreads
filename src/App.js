@@ -8,7 +8,8 @@ import './App.css'
 
 class MyReadsApp extends Component {
   state = {
-    books: {}
+    books: {},
+    query: ''
   }
 
   componentDidMount() {
@@ -40,6 +41,10 @@ class MyReadsApp extends Component {
     BooksAPI.update(book, shelf);
   }
 
+  updateQuery = query => {
+    this.setState({ query: query.trim() });
+  }
+
   render() {
     return (
       <div className="app">
@@ -49,7 +54,14 @@ class MyReadsApp extends Component {
             onChangeShelf={this.setBookShelf}
           />
         )} />
-        <Route path='/search' component={SearchBooks} />
+        <Route path='/search' render={() => (
+          <SearchBooks
+            books={this.state.books}
+            query={this.state.query}
+            onUpdateQuery={this.updateQuery}
+            onChangeShelf={this.setBookShelf}
+          />
+        )} />
       </div>
     )
   }
