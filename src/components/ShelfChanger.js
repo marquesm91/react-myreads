@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 const ShelfChanger = ({ onChangeShelf, shelf }) => (
   <div className="book-shelf-changer">

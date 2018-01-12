@@ -24,13 +24,6 @@ class SearchBar extends Component {
             you don't find a specific author or title. Every search is limited by search terms.
           */}
           <input
-            className='search-contacts'
-            type='text'
-            placeholder='Search contacts'
-            value={query}
-            onChange={event => this.updateQuery(event.target.value)}
-          />
-          <input
             type="text"
             placeholder={this.props.placeholder}
             value={this.state.query}

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Shelf, HeaderPage } from '../components';
 
-
 class ListBooks extends Component {
   filterBooks(shelf) {
     return Object.values(this.props.books).filter(book => book.shelf === shelf);
