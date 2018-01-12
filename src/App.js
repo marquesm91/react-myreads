@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom';
+import { arrayToObject } from './util';
 import * as BooksAPI from './BooksAPI';
 import ListBooks from './view/ListBooks';
 import SearchBooks from './view/SearchBooks';
@@ -8,18 +9,14 @@ import './App.css'
 
 class MyReadsApp extends Component {
   state = {
-    books: {},
-    query: ''
+    books: {}
   }
 
   componentDidMount() {
     BooksAPI.getAll()
       .then(books => {
         // transform array into object and its key = book.id
-        let booksAsObject = books.reduce((acc, cur) => {
-          acc[cur.id] = cur;
-          return acc;
-        }, {});
+        let booksAsObject = arrayToObject(books, 'id');
 
         this.setState({ books: booksAsObject });
       });
@@ -41,10 +38,6 @@ class MyReadsApp extends Component {
     BooksAPI.update(book, shelf);
   }
 
-  updateQuery = query => {
-    this.setState({ query: query.trim() });
-  }
-
   render() {
     return (
       <div className="app">
@@ -57,8 +50,6 @@ class MyReadsApp extends Component {
         <Route path='/search' render={() => (
           <SearchBooks
             books={this.state.books}
-            query={this.state.query}
-            onUpdateQuery={this.updateQuery}
             onChangeShelf={this.setBookShelf}
           />
         )} />
