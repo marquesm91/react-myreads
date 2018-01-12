@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { SearchBar, Book } from '../components';
-import { partition } from '../util';
+import { arrayToObject, partition } from '../util';
 import * as BooksAPI from '../BooksAPI';
 
 class SearchBooks extends Component {
@@ -9,20 +9,39 @@ class SearchBooks extends Component {
   }
 
   doSearch = query => {
-    BooksAPI.search(query).then(fetchedBooks => {
-      // partition fetchedBooks into books which belongs to any shelf or none
-      let [fetchedBooksOffMyShelf, fetchedBooksOnMyShelf] = partition(fetchedBooks, book => !this.props.books[book.id])
+    BooksAPI.search(query.trim())
+      .then(fetchedResult => {
+        if (fetchedResult.error) {
+          console.log(fetchedResult.error)
+        } else {
+          // partition fetchedBooks into books which belongs to any shelf or none
+          let [fetchedBooksOffMyShelf, fetchedBooksOnMyShelf] = partition(fetchedResult, book => !this.props.books[book.id])
 
-      // Get local books state to show its shelf
-      let booksOnMyShelf = fetchedBooksOnMyShelf.map(({ id }) => this.props.books[id]);
+          // Get local books state to show its shelf
+          let booksOnMyShelf = fetchedBooksOnMyShelf.map(({ id }) => this.props.books[id]);
 
-      this.setState({
-        fetchedBooks: {
-          ...fetchedBooksOffMyShelf,
-          ...booksOnMyShelf
+          this.setState({
+            fetchedBooks: arrayToObject([
+              ...fetchedBooksOffMyShelf,
+              ...booksOnMyShelf
+            ], 'id')
+          });
         }
       });
+  }
+
+  changeShelfHandler = (book, shelf) => {
+    this.setState({
+      fetchedBooks: {
+        ...this.state.fetchedBooks,
+        [book.id]: {
+          ...book,
+          shelf: shelf
+        }
+      }
     });
+
+    this.props.onChangeShelf(book, shelf);
   }
 
   render() {
@@ -38,7 +57,7 @@ class SearchBooks extends Component {
           <ol className="books-grid">
             {booksAsArray.length > 0 && booksAsArray.map(book => (
               <li key={book.id} >
-                <Book book={book} onChangeShelf={(book, shelf) => this.props.onChangeShelf(book, shelf)}/>
+                <Book book={book} onChangeShelf={(book, shelf) => this.changeShelfHandler(book, shelf)}/>
               </li>
             ))}
           </ol>
