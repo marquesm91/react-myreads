@@ -15,7 +15,7 @@ class SearchBooks extends Component {
           console.log(fetchedResult.error)
         } else {
           // partition fetchedBooks into books which belongs to any shelf or none
-          let [fetchedBooksOffMyShelf, fetchedBooksOnMyShelf] = partition(fetchedResult, book => !this.props.books[book.id])
+          let [fetchedBooksOnMyShelf, fetchedBooksOffMyShelf] = partition(fetchedResult, book => this.props.books[book.id])
 
           // Get local books state to show its shelf
           let booksOnMyShelf = fetchedBooksOnMyShelf.map(({ id }) => this.props.books[id]);
@@ -25,20 +25,6 @@ class SearchBooks extends Component {
           });
         }
       });
-  }
-
-  changeShelfHandler = (book, shelf) => {
-    this.setState({
-      fetchedBooks: {
-        ...this.state.fetchedBooks,
-        [book.id]: {
-          ...book,
-          shelf: shelf
-        }
-      }
-    });
-
-    this.props.onChangeShelf(book, shelf);
   }
 
   render() {
@@ -52,9 +38,9 @@ class SearchBooks extends Component {
         />
         <div className="search-books-results">
           <ol className="books-grid">
-            {booksAsArray.length > 0 && booksAsArray.map(book => (
+            {booksAsArray.map(book => (
               <li key={book.id} >
-                <Book book={book} onChangeShelf={(book, shelf) => this.changeShelfHandler(book, shelf)}/>
+                <Book book={book} onChangeShelf={(book, shelf) => this.props.onChangeShelf(book, shelf)}/>
               </li>
             ))}
           </ol>

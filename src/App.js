@@ -24,14 +24,17 @@ class MyReadsApp extends Component {
 
   setBookShelf = (book, shelf) => {
     // Add book to books object and set its shelf properly
-    this.setState({
-      books: {
-        ...this.state.books,
-        [book.id]: {
-          ...book,
-          shelf: shelf
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        books: {
+          ...prevState.books,
+          [book.id]: {
+            ...book,
+            shelf: shelf
+          }
         }
-      }
+      };
     });
 
     // Also updates shelf on server to persist data
