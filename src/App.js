@@ -16,7 +16,7 @@ class MyReadsApp extends Component {
     BooksAPI.getAll()
       .then(books => {
         // transform array into object and its key = book.id
-        let booksAsObject = arrayToObject(books, 'id');
+        let booksAsObject = arrayToObject(books);
 
         this.setState({ books: booksAsObject });
       });

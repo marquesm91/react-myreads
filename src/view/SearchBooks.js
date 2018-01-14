@@ -21,10 +21,7 @@ class SearchBooks extends Component {
           let booksOnMyShelf = fetchedBooksOnMyShelf.map(({ id }) => this.props.books[id]);
 
           this.setState({
-            fetchedBooks: arrayToObject([
-              ...fetchedBooksOffMyShelf,
-              ...booksOnMyShelf
-            ], 'id')
+            fetchedBooks: arrayToObject([...fetchedBooksOffMyShelf, ...booksOnMyShelf])
           });
         }
       });

@@ -1,4 +1,6 @@
 export const arrayToObject = (array, key) => {
+  key = key || 'id';
+  
   return array.reduce((acc, cur) => {
     acc[cur[key]] = cur;
     return acc;
