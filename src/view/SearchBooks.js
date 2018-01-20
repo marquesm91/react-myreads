@@ -5,14 +5,17 @@ import * as BooksAPI from '../BooksAPI';
 
 class SearchBooks extends Component {
   state = {
-    fetchedBooks: {}
+    fetchedBooks: {},
+    progressBarStatus: ''
   }
 
   doSearch = query => {
+    this.setState({ progressBarStatus: 'active' });
     BooksAPI.search(query.trim())
       .then(fetchedResult => {
         if (fetchedResult.error) {
-          console.log(fetchedResult.error)
+          // Update fetchedBooks with and object with error key prop
+          this.setState({ fetchedBooks: fetchedResult });
         } else {
           // partition fetchedBooks into books which belongs to any shelf or none
           let [fetchedBooksOnMyShelf, fetchedBooksOffMyShelf] = partition(fetchedResult, book => this.props.books[book.id])
@@ -21,9 +24,11 @@ class SearchBooks extends Component {
           let booksOnMyShelf = fetchedBooksOnMyShelf.map(({ id }) => this.props.books[id]);
 
           this.setState({
-            fetchedBooks: arrayToObject([...fetchedBooksOffMyShelf, ...booksOnMyShelf])
+            fetchedBooks: arrayToObject([...booksOnMyShelf, ...fetchedBooksOffMyShelf])
           });
         }
+
+        this.setState({ progressBarStatus: '' });
       });
   }
 
@@ -36,11 +41,14 @@ class SearchBooks extends Component {
           placeholder="Search by title or author and hit enter"
           onEnterPressed={query => this.doSearch(query)}
         />
+        <div className="search-progress-bar-container">
+          <div className={`search-progress-bar ${this.state.progressBarStatus}`}></div>
+        </div>
         <div className="search-books-results">
           <ol className="books-grid">
             {booksAsArray.map(book => (
               <li key={book.id} >
-                <Book book={book} onChangeShelf={(book, shelf) => this.props.onChangeShelf(book, shelf)}/>
+                <Book book={book} onChangeShelf={(book, shelf) => this.props.onChangeShelf(book, shelf)} />
               </li>
             ))}
           </ol>
