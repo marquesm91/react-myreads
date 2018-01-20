@@ -7,7 +7,15 @@ const Book = ({ onChangeShelf, book }) => {
   return (
     <div className="book">
       <div className="book-top">
-        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${imageLinks.smallThumbnail})` }}></div>
+        <div
+          className="book-cover"
+          style={{
+            width: 128,
+            height: 193,
+            backgroundColor: '#44793B',
+            backgroundImage: imageLinks ? `url(${imageLinks.smallThumbnail})` : null
+          }}
+        ></div>
         <ShelfChanger
           shelf={shelf}
           onChangeShelf={shelf => onChangeShelf(book, shelf)}
