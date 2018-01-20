@@ -152,6 +152,30 @@ body, .app {
   justify-content: center;
   flex: 1;
 }
+.search-books-input-suggestions {
+  position: fixed;
+  width: 100%;
+  top: 50px;
+  left: 0;
+}
+.search-books-input-suggestions-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+.search-books-input-suggestions-list li {
+  padding: 5px 10px 5px 60px;
+  cursor: pointer;
+}
+.search-books-input-suggestions-list li:hover {
+  background-color: #eee;
+}
+.search-books-input-suggestions-list li:focus {
+  outline: 0;
+  background-color: #eee;
+}
 
 /* books grid */
 
