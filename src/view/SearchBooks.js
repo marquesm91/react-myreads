@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SearchBar, BookList } from '../components';
+import { SearchBar, BookList, NotFound } from '../components';
 import { arrayToObject, partition } from '../util';
 import * as BooksAPI from '../BooksAPI';
 
@@ -15,7 +15,7 @@ class SearchBooks extends Component {
       .then(fetchedResult => {
         if (fetchedResult.error) {
           // Update fetchedBooks with and object with error key prop
-          this.setState({ fetchedBooks: {} });
+          this.setState({ fetchedBooks: fetchedResult });
         } else {
           // partition fetchedBooks into books which belongs to any shelf or none
           let [fetchedBooksOnMyShelf, fetchedBooksOffMyShelf] = partition(fetchedResult, book => this.props.books[book.id])
@@ -33,7 +33,14 @@ class SearchBooks extends Component {
   }
 
   render() {
-    const booksAsArray = Object.values(this.state.fetchedBooks);
+    let content = null;
+
+    if (this.state.fetchedBooks.error) {
+      content = <NotFound />;
+    } else {
+      const booksAsArray = Object.values(this.state.fetchedBooks);
+      content = <BookList books={booksAsArray} onChangeShelf={(book, shelf) => this.props.onChangeShelf(book, shelf)} />;
+    }
 
     return (
       <div className="search-books">
@@ -45,7 +52,7 @@ class SearchBooks extends Component {
           <div className={`search-progress-bar ${this.state.progressBarStatus}`}></div>
         </div>
         <div className="search-books-results">
-          <BookList books={booksAsArray} onChangeShelf={(book, shelf) => this.props.onChangeShelf(book, shelf)} />
+          {content}
         </div>
       </div>
     );

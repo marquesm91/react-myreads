@@ -145,6 +145,14 @@ body, .app {
   padding: 80px 10px 20px;
 }
 
+.search-books-no-results {
+  font-weight: bold;
+  font-size: 18;
+  display: flex;
+  justify-content: center;
+  flex: 1;
+}
+
 /* books grid */
 
 .books-grid {
