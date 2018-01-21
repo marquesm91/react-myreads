@@ -6,7 +6,7 @@ import SearchTerms from '../SearchTerms';
 class SearchBar extends Component {
   state = {
     query: '',
-    showSuggestions: false
+    suggestions: null
   }
 
   componentDidMount() {
@@ -14,13 +14,24 @@ class SearchBar extends Component {
   }
 
   onChangeQueryHandler = event => {
-    this.setState({ query: event.target.value, showSuggestions: true });
+    let query = event.target.value;
+
+    if (query) {
+      const match = new RegExp(escapeRegExp(query), 'i');
+      this.setState({ suggestions: SearchTerms.filter(term => match.test(term)).slice(0, 10) });
+    } else {
+      this.setState({ suggestions: null });
+    }
+
+    this.setState({ query });
   }
 
-  onKeyPressInputHandler = event => {
-    if (event.key === 'Enter' && this.state.query) {
-      this.setState({ showSuggestions: false });
-      this.props.onEnterPressed(this.state.query)
+  onKeyDownInputHandler = event => {
+    const { query } = this.state;
+
+    if (event.key === 'Enter' && query) {
+      this.setState({ suggestions: null });
+      this.props.onEnterPressed(query)
     }
   }
 
@@ -29,25 +40,17 @@ class SearchBar extends Component {
     this.input.focus();
     let event = new Event('keypress');
     event.key = 'Enter';
-    this.onKeyPressInputHandler(event);
+    this.onKeyDownInputHandler(event);
   }
 
-  onKeyPressSuggestionHandler = (event, suggestion) => {
+  onKeyDownSuggestionHandler = (event, suggestion) => {
     if (event.key === 'Enter') {
       this.onClickSuggestionHandler(suggestion);
     }
   }
 
   render() {
-    const { query } = this.state;
-    let suggestions;
-
-    if (query) {
-      const match = new RegExp(escapeRegExp(query), 'i');
-      suggestions = SearchTerms.filter(term => match.test(term)).slice(0, 10);
-    } else {
-      suggestions = null;
-    }
+    const { query, suggestions } = this.state;
 
     return (
       <div className="search-books-bar">
@@ -64,20 +67,20 @@ class SearchBar extends Component {
           <input
             type="text"
             placeholder={this.props.placeholder}
-            value={this.state.query}
-            onKeyPress={this.onKeyPressInputHandler}
+            value={query}
+            onKeyDown={this.onKeyDownInputHandler}
             onChange={this.onChangeQueryHandler}
             ref={input => this.input = input}
           />
         </div>
-        {this.state.showSuggestions && suggestions && suggestions.length
+        {suggestions && suggestions.length
           ? <div className="search-books-input-suggestions">
               <ol className="search-books-input-suggestions-list">
                 {suggestions.map((suggestion, index) => (
                   <li
                     key={suggestion}
                     onClick={() => this.onClickSuggestionHandler(suggestion)}
-                    onKeyPress={event => this.onKeyPressSuggestionHandler(event, suggestion)}
+                    onKeyDown={event => this.onKeyDownSuggestionHandler(event, suggestion)}
                     tabIndex="0"
                   >
                     {suggestion}
