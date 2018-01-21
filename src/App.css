@@ -71,6 +71,7 @@ body, .app {
   left: 0;
   top: 52px;
   display: flex;
+  z-index: 1;
 }
 
 .search-progress-bar {
