@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom';
-import { arrayToObject } from './util';
+import { arrayToObject, removeByKey } from './util';
 import * as BooksAPI from './BooksAPI';
 import ListBooks from './view/ListBooks';
 import SearchBooks from './view/SearchBooks';
@@ -9,29 +9,48 @@ import './App.css'
 
 class MyReadsApp extends Component {
   state = {
-    books: {}
+    books: {
+      currentlyReading: {},
+      wantToRead: {},
+      read: {},
+      allBooks: []
+    }
   }
 
   componentDidMount() {
     BooksAPI.getAll()
       .then(books => {
-        // transform array into object and its key = book.id
-        let booksAsObject = arrayToObject(books);
+        let currentlyReading = books.filter(book => book.shelf === 'currentlyReading');
+        let wantToRead = books.filter(book => book.shelf === 'wantToRead');
+        let read = books.filter(book => book.shelf === 'read');
 
-        this.setState({ books: booksAsObject });
+        this.setState({
+          books: {
+            currentlyReading: arrayToObject(currentlyReading),
+            wantToRead: arrayToObject(wantToRead),
+            read: arrayToObject(read),
+            allBooks: books.map(({ id, shelf }) => ({ id, shelf }))
+          }
+        });
       });
   }
 
   setBookShelf = (book, shelf) => {
-    // Add book to books object and set its shelf properly
+    const { allBooks, currentlyReading, wantToRead, read } = this.state.books;
+
     this.setState(prevState => {
       return {
-        ...prevState,
         books: {
-          ...prevState.books,
-          [book.id]: {
-            ...book,
-            shelf: shelf
+          currentlyReading: removeByKey(currentlyReading, book.id),
+          wantToRead: removeByKey(wantToRead, book.id),
+          read: removeByKey(read, book.id),
+          allBooks: [...allBooks.filter(b => b.id !== book.id), { id: book.id, shelf }],
+          [shelf]: {
+            ...prevState.books[shelf],
+            [book.id]: {
+              ...book,
+              shelf: shelf
+            }
           }
         }
       };

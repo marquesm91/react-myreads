@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { SearchBar, BookList, NotFound } from '../components';
-import { arrayToObject, partition } from '../util';
 import * as BooksAPI from '../BooksAPI';
 
 class SearchBooks extends Component {
   state = {
-    fetchedBooks: {},
+    fetchedBooks: [],
     progressBarStatus: ''
   }
 
@@ -15,20 +14,23 @@ class SearchBooks extends Component {
       .then(fetchedResult => {
         if (fetchedResult.error) {
           // Update fetchedBooks with and object with error key prop
-          this.setState({ fetchedBooks: fetchedResult });
+          this.setState({ fetchedBooks: fetchedResult, progressBarStatus: '' });
         } else {
-          // partition fetchedBooks into books which belongs to any shelf or none
-          let [fetchedBooksOnMyShelf, fetchedBooksOffMyShelf] = partition(fetchedResult, book => this.props.books[book.id])
+          let result = [];
 
-          // Get local books state to show its shelf
-          let booksOnMyShelf = fetchedBooksOnMyShelf.map(({ id }) => this.props.books[id]);
+          fetchedResult.forEach(fetchedBook => {
+            let tagBook = this.props.books.allBooks.find(book => book.id === fetchedBook.id);
+            if (tagBook) {
+              const { id, shelf } = tagBook;
+              const book = this.props.books[shelf][id];
+              result.push(book);
+            } else {
+              result.push(fetchedBook);
+            }
+          })
 
-          this.setState({
-            fetchedBooks: arrayToObject([...booksOnMyShelf, ...fetchedBooksOffMyShelf])
-          });
+          this.setState({ fetchedBooks: result, progressBarStatus: '' });
         }
-
-        this.setState({ progressBarStatus: '' });
       });
   }
 
@@ -38,8 +40,7 @@ class SearchBooks extends Component {
     if (this.state.fetchedBooks.error) {
       content = <NotFound />;
     } else {
-      const booksAsArray = Object.values(this.state.fetchedBooks);
-      content = <BookList books={booksAsArray} onChangeShelf={(book, shelf) => this.props.onChangeShelf(book, shelf)} />;
+      content = <BookList books={this.state.fetchedBooks} onChangeShelf={(book, shelf) => this.props.onChangeShelf(book, shelf)} />;
     }
 
     return (
