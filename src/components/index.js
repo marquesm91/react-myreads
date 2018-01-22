@@ -6,3 +6,4 @@ export * from './SearchBar';
 export * from './BookList';
 export * from './NotFound';
 export * from './Loading';
+export * from './Suggestions';
