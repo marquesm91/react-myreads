@@ -235,6 +235,15 @@ body, .app {
 
 .book {
   width: 140px;
+  -webkit-transition: transform 0.15s ease-in-out;
+  -moz-transition: transform 0.15s ease-in-out;
+  -ms-transition: transform 0.15s ease-in-out;
+  -o-transition: transform 0.15s ease-in-out;
+  transition: transform 0.15s ease-in-out;
+}
+.book:hover {
+  transform: scale(1.1);
+  cursor: pointer;
 }
 .book-title,
 .book-authors {
