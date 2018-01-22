@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 
 class ShelfChanger extends Component {
   state = {
-    shelf: this.props.shelf || 'none'
+    shelf: this.props.initialShelf || 'none'
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextState.shelf !== this.state.shelf;
   }
 
   onChangeShelfHandler = (event) => {

@@ -17,7 +17,7 @@ const Book = ({ onChangeShelf, book }) => {
           }}
         ></div>
         <ShelfChanger
-          shelf={shelf}
+          initialShelf={shelf}
           onChangeShelf={shelf => onChangeShelf(book, shelf)}
         />
       </div>
