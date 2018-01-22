@@ -242,7 +242,6 @@ body, .app {
   transition: transform 0.15s ease-in-out;
 }
 .book:hover {
-  transform: scale(1.1);
   cursor: pointer;
 }
 .book-title,
