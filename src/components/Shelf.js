@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { length } from '../util';
-import { BookList } from './index';
+import { BookList, Loading } from './index';
 
 class Shelf extends Component {
   shouldComponentUpdate(nextProps) {
@@ -14,7 +14,10 @@ class Shelf extends Component {
       <div className="bookshelf">
         <h2 className="bookshelf-title">{title}</h2>
         <div className="bookshelf-books">
-          <BookList books={books} onChangeShelf={(book, shelf) => onChangeShelf(book, shelf)} />
+          {books.length
+            ? <BookList books={books} onChangeShelf={(book, shelf) => onChangeShelf(book, shelf)} />
+            : <Loading />
+          }
         </div>
       </div>
     );
