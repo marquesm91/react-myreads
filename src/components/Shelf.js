@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { length } from '../util';
 import { BookList, Loading } from './index';
 
 class Shelf extends Component {
   shouldComponentUpdate(nextProps) {
-    return length(nextProps.books) !== length(this.props.books);
+    if (!this.props.books) {
+      return true;
+    }
+
+    return nextProps.books.length !== this.props.books.length;
   }
 
   render() {
@@ -14,7 +17,7 @@ class Shelf extends Component {
       <div className="bookshelf">
         <h2 className="bookshelf-title">{title}</h2>
         <div className="bookshelf-books">
-          {books.length
+          {books
             ? <BookList books={books} onChangeShelf={(book, shelf) => onChangeShelf(book, shelf)} />
             : <Loading />
           }

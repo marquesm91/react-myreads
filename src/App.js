@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom';
-import { arrayToObject, removeByKey } from './util';
 import * as BooksAPI from './BooksAPI';
 import ListBooks from './view/ListBooks';
 import SearchBooks from './view/SearchBooks';
@@ -10,9 +9,9 @@ import './App.css'
 class MyReadsApp extends Component {
   state = {
     books: {
-      currentlyReading: {},
-      wantToRead: {},
-      read: {},
+      currentlyReading: null,
+      wantToRead: null,
+      read: null,
       allBooks: []
     }
   }
@@ -26,9 +25,9 @@ class MyReadsApp extends Component {
 
         this.setState({
           books: {
-            currentlyReading: arrayToObject(currentlyReading),
-            wantToRead: arrayToObject(wantToRead),
-            read: arrayToObject(read),
+            currentlyReading: currentlyReading,
+            wantToRead: wantToRead,
+            read: read,
             allBooks: books.map(({ id, shelf }) => ({ id, shelf }))
           }
         });
@@ -36,22 +35,13 @@ class MyReadsApp extends Component {
   }
 
   setBookShelf = (book, shelf) => {
-    const { allBooks, currentlyReading, wantToRead, read } = this.state.books;
-
     this.setState(prevState => {
       return {
         books: {
-          currentlyReading: removeByKey(currentlyReading, book.id),
-          wantToRead: removeByKey(wantToRead, book.id),
-          read: removeByKey(read, book.id),
-          allBooks: [...allBooks.filter(b => b.id !== book.id), { id: book.id, shelf }],
-          [shelf]: {
-            ...prevState.books[shelf],
-            [book.id]: {
-              ...book,
-              shelf: shelf
-            }
-          }
+          ...prevState.books,
+          allBooks: [...prevState.books.allBooks.filter(b => b.id !== book.id), { id: book.id, shelf }],
+          [shelf]: [...prevState.books[shelf], { ...book, shelf: shelf }],
+          [book.shelf]: prevState.books[book.shelf].filter(b => b.id !== book.id)
         }
       };
     });

@@ -10,6 +10,7 @@ class SearchBooks extends Component {
 
   doSearch = query => {
     this.setState({ progressBarStatus: 'active' });
+
     BooksAPI.search(query.trim())
       .then(fetchedResult => {
         if (fetchedResult.error) {
@@ -22,7 +23,7 @@ class SearchBooks extends Component {
             let tagBook = this.props.books.allBooks.find(book => book.id === fetchedBook.id);
             if (tagBook) {
               const { id, shelf } = tagBook;
-              const book = this.props.books[shelf][id];
+              const book = this.props.books[shelf].find(b => b.id === id);
               result.push(book);
             } else {
               result.push(fetchedBook);
@@ -35,12 +36,13 @@ class SearchBooks extends Component {
   }
 
   render() {
+    const { fetchedBooks, progressBarStatus } = this.state;
     let content = null;
 
-    if (this.state.fetchedBooks.error) {
+    if (fetchedBooks.error) {
       content = <NotFound />;
     } else {
-      content = <BookList books={this.state.fetchedBooks} onChangeShelf={(book, shelf) => this.props.onChangeShelf(book, shelf)} />;
+      content = <BookList books={fetchedBooks} onChangeShelf={(book, shelf) => this.props.onChangeShelf(book, shelf)} />;
     }
 
     return (
@@ -50,7 +52,7 @@ class SearchBooks extends Component {
           onEnterPressed={query => this.doSearch(query)}
         />
         <div className="search-progress-bar-container">
-          <div className={`search-progress-bar ${this.state.progressBarStatus}`}></div>
+          <div className={`search-progress-bar ${progressBarStatus}`}></div>
         </div>
         <div className="search-books-results">
           {content}
