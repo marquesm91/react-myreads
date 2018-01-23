@@ -11,7 +11,7 @@ body, .app {
 /* main page */
 
 .list-books-title {
-  padding: 10px 0;
+  padding: 10px;
   background: #2e7c31;
   text-align: center;
 }
@@ -235,11 +235,6 @@ body, .app {
 
 .book {
   width: 140px;
-  -webkit-transition: transform 0.15s ease-in-out;
-  -moz-transition: transform 0.15s ease-in-out;
-  -ms-transition: transform 0.15s ease-in-out;
-  -o-transition: transform 0.15s ease-in-out;
-  transition: transform 0.15s ease-in-out;
 }
 .book:hover {
   cursor: pointer;
@@ -286,11 +281,29 @@ body, .app {
 /* book cover */
 
 .book-cover {
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  box-shadow: 3px 6px 6px rgba(0,0,0,0.16), 3px 6px 6px rgba(0,0,0,0.23);
   background: #eee;
+  -webkit-transition: box-shadow 0.15s ease-in-out;
+  -moz-transition: box-shadow 0.15s ease-in-out;
+  -ms-transition: box-shadow 0.15s ease-in-out;
+  -o-transition: box-shadow 0.15s ease-in-out;
+  transition: box-shadow 0.15s ease-in-out;
+}
+.book-cover:hover {
+  box-shadow: 6px 9px 9px rgba(0,0,0,0.16), 6px 9px 9px rgba(0,0,0,0.23);
 }
 .book-cover-title {
   padding: 20px 10px 0;
   text-align: center;
   font-size: 0.8em;
+}
+
+/* details page */
+
+.details-book {
+  flex: 1;
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

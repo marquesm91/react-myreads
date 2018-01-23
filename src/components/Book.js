@@ -1,18 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { ShelfChanger } from './index';
 
-class Book extends Component {
-  state = {
-    scale: 1
-  }
+const Book = ({ onChangeShelf, book }) => {
+  const { id, title, authors, imageLinks, shelf } = book;
 
-  render() {
-    const { onChangeShelf, book } = this.props;
-    const { title, authors, imageLinks, shelf } = book;
-
-    return (
-      <div className="book" style={{ transform: `scale(${this.state.scale})` }}>
-        <div className="book-top">
+  return (
+    <div className="book">
+      <div className="book-top">
+        <Link to={{ pathname: `/details/${id}`, state: { book } }}>
           <div
             className="book-cover"
             style={{
@@ -21,19 +17,17 @@ class Book extends Component {
               backgroundColor: '#44793B',
               backgroundImage: imageLinks ? `url(${imageLinks.smallThumbnail})` : null
             }}
-            onMouseEnter={() => this.setState({ scale: 1.1 })}
-            onMouseLeave={() => this.setState({ scale: 1 })}
           ></div>
-          <ShelfChanger
-            initialShelf={shelf}
-            onChangeShelf={shelf => onChangeShelf(book, shelf)}
-          />
-        </div>
-        <div className="book-title">{title}</div>
-        <div className="book-authors">{authors ? authors.join(', ') : null}</div>
+        </Link>
+        <ShelfChanger
+          initialShelf={shelf}
+          onChangeShelf={shelf => onChangeShelf(book, shelf)}
+        />
       </div>
-    );
-  }
-}
+      <div className="book-title">{title}</div>
+      <div className="book-authors">{authors ? authors.join(', ') : null}</div>
+    </div>
+  );
+};
 
 export { Book };
