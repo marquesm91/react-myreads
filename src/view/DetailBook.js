@@ -7,17 +7,17 @@ const DetailBook = ({ book }) => {
 
   return (
     <div className="details-book">
-      <div className="book-top">
-        <div
-          className="book-cover"
-          style={{
-            width: 128,
-            height: 193,
-            backgroundColor: '#44793B',
-            backgroundImage: imageLinks ? `url(${imageLinks.smallThumbnail})` : null
-          }}
-        ></div>
-      </div>
+      <div
+        className="book-cover"
+        style={{
+          width: 225,
+          height: 300,
+          backgroundColor: '#44793B',
+          backgroundImage: imageLinks ? `url(${imageLinks.thumbnail})` : null,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat'
+        }}
+      ></div>
       <div className="book-title">{title}</div>
       <div className="book-authors">{authors ? authors.join(', ') : null}</div>
     </div>
