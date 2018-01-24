@@ -1,24 +1,21 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { ShelfChanger } from './index';
 
 const Book = ({ onChangeShelf, book }) => {
-  const { id, title, authors, imageLinks, shelf } = book;
+  const { title, authors, imageLinks, shelf } = book;
 
   return (
     <div className="book">
       <div className="book-top">
-        <Link to={{ pathname: `/details/${id}`, state: { book } }}>
-          <div
-            className="book-cover"
-            style={{
-              width: 128,
-              height: 193,
-              backgroundColor: '#44793B',
-              backgroundImage: imageLinks ? `url(${imageLinks.smallThumbnail})` : null
-            }}
-          ></div>
-        </Link>
+        <div
+          className="book-cover"
+          style={{
+            width: 128,
+            height: 193,
+            backgroundColor: '#44793B',
+            backgroundImage: imageLinks ? `url(${imageLinks.smallThumbnail})` : null
+          }}
+        ></div>
         <ShelfChanger
           initialShelf={shelf}
           onChangeShelf={shelf => onChangeShelf(book, shelf)}
