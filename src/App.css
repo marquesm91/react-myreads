@@ -105,6 +105,7 @@ body, .app {
   position: fixed;
   right: 25px;
   bottom: 25px;
+  z-index: 1;
 }
 .open-search a {
   display: block;
