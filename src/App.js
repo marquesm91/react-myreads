@@ -3,7 +3,6 @@ import { Route } from 'react-router-dom';
 import * as BooksAPI from './BooksAPI';
 import ListBooks from './view/ListBooks';
 import SearchBooks from './view/SearchBooks';
-import DetailBook from './view/DetailBook';
 
 import './App.css'
 
@@ -20,35 +19,58 @@ class MyReadsApp extends Component {
   componentDidMount() {
     BooksAPI.getAll()
       .then(books => {
-        let currentlyReading = books.filter(book => book.shelf === 'currentlyReading');
-        let wantToRead = books.filter(book => book.shelf === 'wantToRead');
-        let read = books.filter(book => book.shelf === 'read');
+        let currentlyReading = [];
+        let wantToRead = [];
+        let read = [];
+        let allBooks = [];
 
-        this.setState({
-          books: {
-            currentlyReading: currentlyReading,
-            wantToRead: wantToRead,
-            read: read,
-            allBooks: books.map(({ id, shelf }) => ({ id, shelf }))
+        books.forEach(book => {
+          allBooks.push({ id: book.id, shelf: book.shelf });
+
+          switch (book.shelf) {
+            case 'currentlyReading': currentlyReading.push(book); break;
+            case 'wantToRead': wantToRead.push(book); break;
+            case 'read': read.push(book); break;
           }
-        });
+        })
+
+        this.setState({ books: { currentlyReading, wantToRead, read, allBooks } });
       });
   }
 
-  setBookShelf = (book, shelf) => {
+  setBookShelf = (book, newShelf) => {
     this.setState(prevState => {
+      const { books } = prevState;
+
+      let nextState = {};
+      let tagBook = books.allBooks.find(b => b.id === book.id);
+
+      // if updating shelf book will be readd or filtered when newShelf === 'none'
+      nextState.allBooks = books.allBooks.filter(b => b.id !== book.id)
+
+      if (tagBook) {
+        const { shelf } = tagBook;
+
+        // Remove book from old shelf
+        nextState[shelf] = books[shelf].filter(b => b.id !== book.id);
+      }
+
+      if (newShelf !== 'none') {
+        // Add book into new shelf and update allBooks
+        nextState[newShelf] = [...books[newShelf], { ...book, shelf: newShelf }];
+        nextState.allBooks = [...nextState.allBooks, { id: book.id, shelf: newShelf }]
+      }
+
       return {
         books: {
-          ...prevState.books,
-          allBooks: [...prevState.books.allBooks.filter(b => b.id !== book.id), { id: book.id, shelf }],
-          [shelf]: [...prevState.books[shelf], { ...book, shelf: shelf }],
-          [book.shelf]: prevState.books[book.shelf].filter(b => b.id !== book.id)
+          ...books,
+          ...nextState
         }
       };
     });
 
     // Also updates shelf on server to persist data
-    BooksAPI.update(book, shelf);
+    BooksAPI.update(book, newShelf);
   }
 
   render() {
@@ -65,9 +87,6 @@ class MyReadsApp extends Component {
             books={this.state.books}
             onChangeShelf={this.setBookShelf}
           />
-        )} />
-        <Route path='/details/:id' render={({ location }) => (
-          <DetailBook book={location.state.book} />
         )} />
       </div>
     )
