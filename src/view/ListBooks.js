@@ -1,13 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shelf, HeaderPage } from '../components';
+import { Shelf } from '../components';
 
 const ListBooks = ({ onChangeShelf, books }) => {
   const { currentlyReading, wantToRead, read } = books;
 
   return (
     <div className="list-books">
-      <HeaderPage title="My Reads" />
+      <div className="list-books-title">
+        <h1>My Reads</h1>
+      </div>
       <div className="list-books-content">
         <div>
           <Shelf title="Currently Reading" books={currentlyReading} onChangeShelf={(book, shelf) => onChangeShelf(book, shelf)} />
