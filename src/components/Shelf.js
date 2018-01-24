@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BookList, Loading } from './index';
+import { BookList, Loader } from './index';
 
 class Shelf extends Component {
   shouldComponentUpdate(nextProps) {
@@ -19,7 +19,7 @@ class Shelf extends Component {
         <div className="bookshelf-books">
           {books
             ? <BookList books={books} onChangeShelf={(book, shelf) => onChangeShelf(book, shelf)} />
-            : <Loading />
+            : <Loader />
           }
         </div>
       </div>

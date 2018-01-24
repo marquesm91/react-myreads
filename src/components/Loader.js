@@ -1,25 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Loading = ({ size, color }) => {
+const Loader = ({ size, color }) => {
   return (
-    <div className="bookshelf-loading-container">
+    <div className="bookshelf-loader-container">
       <div
-        className={`bookshelf-loading ${size}`}
+        className={`bookshelf-loader ${size}`}
         style={{ borderTopColor: color }}
       ></div>
     </div>
   );
 };
 
-Loading.propTypes = {
+Loader.propTypes = {
   size: PropTypes.string,
   color: PropTypes.string
 };
 
-Loading.defaultProps = {
+Loader.defaultProps = {
   size: 'large',
   color: '#277c32'
 };
 
-export { Loading };
+export { Loader };
