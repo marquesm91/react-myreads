@@ -14,6 +14,7 @@ body, .app {
   position: fixed;
   left: 25px;
   bottom: 25px;
+  width: 100%;
   z-index: 1;
 }
 .feedback-api {
@@ -22,14 +23,47 @@ body, .app {
   align-items: center;
 
   padding: 0 12px 0 12px;
+  width: 150px;
   height: 50px;
   color: #fff;
-  border-radius: 5px;
   background: #2e7d32;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  box-shadow: 6px 9px 9px rgba(0,0,0,0.16), 6px 9px 9px rgba(0,0,0,0.23);
 
   font-weight: bold;
   font-size: 18px;
+
+  opacity: 0;
+  -webkit-transition: opacity 0.25s ease-in-out;
+  -moz-transition: opacity 0.25s ease-in-out;
+  -ms-transition: opacity 0.25s ease-in-out;
+  -o-transition: opacity 0.25s ease-in-out;
+  transition: opacity 0.25s ease-in-out;
+}
+.feedback-api.active {
+  opacity: 1;
+  animation-duration: 0.6s;
+  animation-name: slideToLeft;
+}
+
+/* Safari */
+@-webkit-keyframes slideToLeft {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes slideToLeft {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0%);
+  }
 }
 
 /* main page */
@@ -158,6 +192,17 @@ body, .app {
   animation-name: progressBarMove;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+}
+
+/* Safari */
+@-webkit-keyframes progressBarMove {
+  from {
+    transform: translateX(5%);
+  }
+
+  to {
+    transform: translateX(95%);
+  }
 }
 
 @keyframes progressBarMove {

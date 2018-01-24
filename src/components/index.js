@@ -7,3 +7,4 @@ export * from './BookList';
 export * from './NotFound';
 export * from './Loader';
 export * from './Suggestions';
+export * from './Feedback';
