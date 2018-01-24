@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom';
 import * as BooksAPI from './BooksAPI';
+import { Feedback } from './components';
 import ListBooks from './view/ListBooks';
 import SearchBooks from './view/SearchBooks';
 
@@ -13,7 +14,8 @@ class MyReadsApp extends Component {
       wantToRead: null,
       read: null,
       allBooks: []
-    }
+    },
+    feedback: ''
   }
 
   componentDidMount() {
@@ -39,43 +41,47 @@ class MyReadsApp extends Component {
   }
 
   setBookShelf = (book, newShelf) => {
-    this.setState(prevState => {
-      const { books } = prevState;
+    this.setState({ feedback: 'Loading' })
 
-      let nextState = {};
-      let tagBook = books.allBooks.find(b => b.id === book.id);
+    // Updates shelf on server to persist data
+    BooksAPI.update(book, newShelf).then(() => {
+      this.setState(prevState => {
+        const { books } = prevState;
 
-      // if updating shelf book will be readd or filtered when newShelf === 'none'
-      nextState.allBooks = books.allBooks.filter(b => b.id !== book.id)
+        let nextState = {};
+        let tagBook = books.allBooks.find(b => b.id === book.id);
 
-      if (tagBook) {
-        const { shelf } = tagBook;
+        // if updating shelf book will be readd or filtered when newShelf === 'none'
+        nextState.allBooks = books.allBooks.filter(b => b.id !== book.id)
 
-        // Remove book from old shelf
-        nextState[shelf] = books[shelf].filter(b => b.id !== book.id);
-      }
+        if (tagBook) {
+          const { shelf } = tagBook;
 
-      if (newShelf !== 'none') {
-        // Add book into new shelf and update allBooks
-        nextState[newShelf] = [...books[newShelf], { ...book, shelf: newShelf }];
-        nextState.allBooks = [...nextState.allBooks, { id: book.id, shelf: newShelf }]
-      }
-
-      return {
-        books: {
-          ...books,
-          ...nextState
+          // Remove book from old shelf
+          nextState[shelf] = books[shelf].filter(b => b.id !== book.id);
         }
-      };
-    });
 
-    // Also updates shelf on server to persist data
-    BooksAPI.update(book, newShelf);
+        if (newShelf !== 'none') {
+          // Add book into new shelf and update allBooks
+          nextState[newShelf] = [...books[newShelf], { ...book, shelf: newShelf }];
+          nextState.allBooks = [...nextState.allBooks, { id: book.id, shelf: newShelf }]
+        }
+
+        return {
+          books: { ...books, ...nextState },
+          feedback: 'Success'
+        };
+      });
+
+      setTimeout(() => this.setState({ feedback: '' }), 1500);
+    });
   }
 
   render() {
     return (
       <div className="app">
+        <Feedback type={this.state.feedback} />
+
         <Route exact path='/' render={() => (
           <ListBooks
             books={this.state.books}
