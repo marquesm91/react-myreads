@@ -8,6 +8,12 @@ class SearchBooks extends Component {
     progressBarStatus: ''
   }
 
+  isBookInAnyShelf = book => {
+    const { currentlyReading, wantToRead, read } = this.props.books;
+    let shelves = [ ...currentlyReading, ...wantToRead, ...read ];
+    return shelves.find(b => b.id === book.id);
+  }
+
   doSearch = (query, onlyNewBooks) => {
     this.setState({ progressBarStatus: 'active' });
 
@@ -20,15 +26,11 @@ class SearchBooks extends Component {
           let result = [];
 
           fetchedResult.forEach(fetchedBook => {
-            let tagBook = this.props.books.allBooks.find(book => book.id === fetchedBook.id);
-
-            // When fetchedBook not exist in any shelf
-            if (!tagBook) {
+            let bookInMyShelf = this.isBookInAnyShelf(fetchedBook);
+            if (!bookInMyShelf) {
               result.push(fetchedBook);
-            } else if (!onlyNewBooks) { // When fetchedBook exists and onlyNewBooks are not marked
-              const { id, shelf } = tagBook;
-              const book = this.props.books[shelf].find(b => b.id === id);
-              result.push(book);
+            } else if (!onlyNewBooks) {
+              result.push(bookInMyShelf);
             }
           })
 

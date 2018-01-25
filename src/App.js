@@ -12,8 +12,7 @@ class MyReadsApp extends Component {
     books: {
       currentlyReading: null,
       wantToRead: null,
-      read: null,
-      allBooks: []
+      read: null
     },
     feedback: ''
   }
@@ -24,11 +23,8 @@ class MyReadsApp extends Component {
         let currentlyReading = [];
         let wantToRead = [];
         let read = [];
-        let allBooks = [];
 
         books.forEach(book => {
-          allBooks.push({ id: book.id, shelf: book.shelf });
-
           switch (book.shelf) {
             case 'currentlyReading': currentlyReading.push(book); break;
             case 'wantToRead': wantToRead.push(book); break;
@@ -36,44 +32,57 @@ class MyReadsApp extends Component {
           }
         })
 
-        this.setState({ books: { currentlyReading, wantToRead, read, allBooks } });
+        this.setState({ books: { currentlyReading, wantToRead, read } });
       });
   }
 
-  setBookShelf = (book, newShelf) => {
-    this.setState({ feedback: 'Loading' })
+  updateShelf = (shelfResult, shelfName) => (
+    new Promise(resolve => {
+      let promise = null;
+      let shelf = [];
 
-    // Updates shelf on server to persist data
-    BooksAPI.update(book, newShelf).then(() => {
-      this.setState(prevState => {
-        const { books } = prevState;
-
-        let nextState = {};
-        let tagBook = books.allBooks.find(b => b.id === book.id);
-
-        // if updating shelf book will be readd or filtered when newShelf === 'none'
-        nextState.allBooks = books.allBooks.filter(b => b.id !== book.id)
-
-        if (tagBook) {
-          const { shelf } = tagBook;
-
-          // Remove book from old shelf
-          nextState[shelf] = books[shelf].filter(b => b.id !== book.id);
-        }
-
-        if (newShelf !== 'none') {
-          // Add book into new shelf and update allBooks
-          nextState[newShelf] = [...books[newShelf], { ...book, shelf: newShelf }];
-          nextState.allBooks = [...nextState.allBooks, { id: book.id, shelf: newShelf }]
-        }
-
-        return {
-          books: { ...books, ...nextState },
-          feedback: 'Success'
-        };
+      shelfResult.forEach(id => {
+        let book = this.state.books[shelfName].find(book => book.id === id)
+        // Populate shelf if book exists in shelf otherwise save promise to fetch book later
+        book ? shelf.push(book) : (promise = BooksAPI.get(id));
       });
 
-      setTimeout(() => this.setState({ feedback: '' }), 1500);
+      // If any promise exists some book need to be fetched
+      promise
+        ? promise.then(book => {
+            shelf.push(book);
+            resolve(shelf);
+          })
+        : resolve(shelf);
+    })
+  )
+
+  setBookShelf = (book, newShelf) => {
+    this.setState({ feedback: 'Loading' });
+
+    // Update shelf on server to persist data
+    BooksAPI.update(book, newShelf).then(resultBooks => {
+      this.setState({ feedback: 'Success' });
+      const shelves = Object.keys(this.state.books);
+
+      // Also Update shelves locally consuming the result provided from API
+      shelves.forEach(shelfName => {
+        this.updateShelf(resultBooks[shelfName], shelfName)
+          .then(shelf => {
+            this.setState(prevState => {
+              return {
+                ...prevState,
+                books: {
+                  ...prevState.books,
+                  [shelfName]: shelf
+                }
+              }
+            });
+          });
+      })
+
+      // When code reached here omit feedback box after 1 second
+      setTimeout(() => this.setState({ feedback: '' }), 1000);
     });
   }
 
