@@ -5,6 +5,7 @@ import { Suggestions } from './index';
 class SearchBar extends Component {
   state = {
     query: '',
+    onlyNewBooks: false,
     showSuggestions: false
   }
 
@@ -22,7 +23,7 @@ class SearchBar extends Component {
 
     if (event.key === 'Enter' && query) {
       this.setState({ showSuggestions: false });
-      this.props.onEnterPressed(query)
+      this.props.onEnterPressed(query, this.state.onlyNewBooks)
     }
   }
 
@@ -38,6 +39,14 @@ class SearchBar extends Component {
     return (
       <div className="search-books-bar">
         <Link to='/' className='close-search'>Close</Link>
+        <div className="search-books-filter">
+          <span>Only new</span>
+          <input
+            type="checkbox"
+            value={this.state.onlyNewBooks}
+            onChange={event => this.setState({ onlyNewBooks: event.target.checked })}
+          />
+        </div>
         <div className="search-books-input-wrapper">
           <input
             type="text"

@@ -8,7 +8,7 @@ class SearchBooks extends Component {
     progressBarStatus: ''
   }
 
-  doSearch = query => {
+  doSearch = (query, onlyNewBooks) => {
     this.setState({ progressBarStatus: 'active' });
 
     BooksAPI.search(query.trim())
@@ -21,12 +21,14 @@ class SearchBooks extends Component {
 
           fetchedResult.forEach(fetchedBook => {
             let tagBook = this.props.books.allBooks.find(book => book.id === fetchedBook.id);
-            if (tagBook) {
+
+            // When fetchedBook not exist in any shelf
+            if (!tagBook) {
+              result.push(fetchedBook);
+            } else if (!onlyNewBooks) { // When fetchedBook exists and onlyNewBooks are not marked
               const { id, shelf } = tagBook;
               const book = this.props.books[shelf].find(b => b.id === id);
               result.push(book);
-            } else {
-              result.push(fetchedBook);
             }
           })
 
@@ -49,7 +51,7 @@ class SearchBooks extends Component {
       <div className="search-books">
         <SearchBar
           placeholder="Search by title or author and hit enter"
-          onEnterPressed={query => this.doSearch(query)}
+          onEnterPressed={(query, onlyNewBooks) => this.doSearch(query, onlyNewBooks)}
         />
         <div className="search-progress-bar-container">
           <div className={`search-progress-bar ${progressBarStatus}`}></div>
