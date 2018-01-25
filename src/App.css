@@ -259,7 +259,9 @@ body, .app {
   align-items: center;
   justify-content: center;
   width: 50px;
+  background: white;
   height: 53px;
+  z-index: 1;
 }
 
 .search-books-filter span {
