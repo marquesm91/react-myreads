@@ -23,6 +23,7 @@ After the default installation with `create-react-app`, three 3rd party library 
 * `react-router-dom` found [here](https://github.com/ReactTraining/react-router) and used for better experience with browser url navigation and keep react application sync'd.
 * `escape-string-regexp` found [here](https://github.com/sindresorhus/escape-string-regexp) and used for format RegExp.
 * `sort-by` found [here](https://github.com/kvnneff/sort-by) and used for sort array based on an key object.
+* `throttle-debounce` found [here](https://github.com/niksy/throttle-debounce) and used for debounce search bar.
 
 The application consumes **BooksAPI** provided earlier from the starter kit Github [repo](https://github.com/udacity/reactnd-project-myreads-starter).
 
