@@ -171,7 +171,6 @@ body, .app {
   left: 0;
   top: 52px;
   display: flex;
-  z-index: 1;
 }
 
 .search-progress-bar {
@@ -282,8 +281,9 @@ body, .app {
 .search-books-input-suggestions {
   position: fixed;
   width: 100%;
-  top: 50px;
+  top: 57px;
   left: 0;
+  z-index: 1;
 }
 .search-books-input-suggestions-list {
   list-style-type: none;

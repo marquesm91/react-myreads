@@ -3,16 +3,23 @@ import escapeRegExp from 'escape-string-regexp';
 import SearchTerms from '../SearchTerms';
 
 class Suggestions extends Component {
+  componentDidMount() {
+    document.addEventListener('mousedown', this.handleClickOutside);
+  }
 
-  onClickSuggestionHandler = suggestion => {
-    let event = new Event('keypress');
-    event.key = 'Enter';
-    this.props.onChooseSuggestion(event, suggestion);
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+
+  handleClickOutside = event => {
+    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+      this.props.onClickOutsideSuggestions();
+    }
   }
 
   onKeyDownSuggestionHandler = (event, suggestion) => {
     if (event.key === 'Enter') {
-      this.onClickSuggestionHandler(suggestion);
+      this.props.onChooseSuggestion(suggestion);
     }
   }
 
@@ -27,16 +34,16 @@ class Suggestions extends Component {
 
     return (
       suggestions && suggestions.length
-        ? <div className="search-books-input-suggestions">
+        ? <div className="search-books-input-suggestions" ref={node => this.wrapperRef = node}>
             <ol className="search-books-input-suggestions-list">
               {suggestions.map((suggestion, index) => (
                 <li
                   key={suggestion}
-                  onClick={() => this.onClickSuggestionHandler(suggestion)}
+                  onClick={() => this.props.onChooseSuggestion(suggestion)}
                   onKeyDown={event => this.onKeyDownSuggestionHandler(event, suggestion)}
                   tabIndex="0"
                 >
-                  {suggestion}
+                  <span>{suggestion}</span>
                 </li>
               ))}
             </ol>

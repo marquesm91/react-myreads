@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { debounce } from 'throttle-debounce';
 import { Suggestions } from './index';
 
 class SearchBar extends Component {
@@ -11,6 +12,7 @@ class SearchBar extends Component {
 
   componentDidMount() {
     this.input.focus();
+    this.onKeyDownInputHandler = debounce(500, this.onKeyDownInputHandler);
   }
 
   onChangeQueryHandler = event => this.setState({
@@ -18,19 +20,22 @@ class SearchBar extends Component {
     showSuggestions: true
   });
 
-  onKeyDownInputHandler = event => {
+  onKeyDownInputHandler = () => {
     const { query } = this.state;
 
-    if (event.key === 'Enter' && query) {
-      this.setState({ showSuggestions: false });
+    if (query) {
       this.props.onEnterPressed(query, this.state.onlyNewBooks)
     }
   }
 
-  onChooseSuggestion = (event, suggestion) => {
+  onChooseSuggestion = suggestion => {
     this.input.focus();
-    this.setState({ query: suggestion })
-    this.onKeyDownInputHandler(event);
+    this.setState({ showSuggestions: false });
+
+    if (suggestion !== this.state.query) {
+      this.setState({ query: suggestion });
+      this.onKeyDownInputHandler();
+    }
   }
 
   render() {
@@ -60,7 +65,8 @@ class SearchBar extends Component {
         <Suggestions
           query={query}
           showSuggestions={showSuggestions}
-          onChooseSuggestion={(event, suggestion) => this.onChooseSuggestion(event, suggestion)}
+          onChooseSuggestion={suggestion => this.onChooseSuggestion(suggestion)}
+          onClickOutsideSuggestions={() => this.setState({ showSuggestions: false })}
         />
       </div>
     );
