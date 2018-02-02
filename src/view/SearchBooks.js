@@ -10,7 +10,7 @@ class SearchBooks extends Component {
 
   isBookInAnyShelf = book => {
     const { currentlyReading, wantToRead, read } = this.props.books;
-    let shelves = [ ...currentlyReading, ...wantToRead, ...read ];
+    const shelves = [ ...currentlyReading, ...wantToRead, ...read ];
     return shelves.find(b => b.id === book.id);
   }
 
@@ -53,7 +53,7 @@ class SearchBooks extends Component {
       <div className="search-books">
         <SearchBar
           placeholder="Search by title or author and hit enter"
-          onEnterPressed={(query, onlyNewBooks) => this.doSearch(query, onlyNewBooks)}
+          doSearch={this.doSearch}
         />
         <div className="search-progress-bar-container">
           <div className={`search-progress-bar ${progressBarStatus}`}></div>

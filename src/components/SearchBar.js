@@ -21,10 +21,10 @@ class SearchBar extends Component {
   });
 
   onKeyDownInputHandler = () => {
-    const { query } = this.state;
+    const { query, onlyNewBooks } = this.state;
 
     if (query) {
-      this.props.onEnterPressed(query, this.state.onlyNewBooks)
+      this.props.doSearch(query, onlyNewBooks);
     }
   }
 

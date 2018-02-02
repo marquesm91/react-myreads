@@ -20,9 +20,9 @@ class MyReadsApp extends Component {
   componentDidMount() {
     BooksAPI.getAll()
       .then(books => {
-        let currentlyReading = [];
-        let wantToRead = [];
-        let read = [];
+        const currentlyReading = [];
+        const wantToRead = [];
+        const read = [];
 
         books.forEach(book => {
           switch (book.shelf) {
@@ -66,19 +66,17 @@ class MyReadsApp extends Component {
       const shelves = Object.keys(this.state.books);
 
       // Also Update shelves locally consuming the result provided from API
-      shelves.forEach(shelfName => {
-        this.updateShelf(resultBooks[shelfName], shelfName)
-          .then(shelf => {
-            this.setState(prevState => {
-              return {
-                ...prevState,
-                books: {
-                  ...prevState.books,
-                  [shelfName]: shelf
-                }
-              }
-            });
-          });
+      shelves.forEach(async shelfName => {
+        const shelf = await this.updateShelf(resultBooks[shelfName], shelfName);
+        this.setState(prevState => {
+          return {
+            ...prevState,
+            books: {
+              ...prevState.books,
+              [shelfName]: shelf
+            }
+          }
+        });
       })
 
       // When code reached here omit feedback box after 1 second

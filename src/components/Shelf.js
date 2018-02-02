@@ -6,7 +6,7 @@ const Shelf = ({ onChangeShelf, title, books }) => (
     <h2 className="bookshelf-title">{title}</h2>
     <div className="bookshelf-books">
       {books
-        ? <BookList books={books} onChangeShelf={(book, shelf) => onChangeShelf(book, shelf)} />
+        ? <BookList books={books} onChangeShelf={onChangeShelf} />
         : <Loader />
       }
     </div>

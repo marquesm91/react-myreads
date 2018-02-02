@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import escapeRegExp from 'escape-string-regexp';
 import SearchTerms from '../SearchTerms';
 
-class Suggestions extends Component {
+class Suggestions extends PureComponent {
   componentDidMount() {
     document.addEventListener('mousedown', this.handleClickOutside);
   }
